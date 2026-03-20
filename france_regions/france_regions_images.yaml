@@ -1,0 +1,83 @@
+layout:
+  slide:
+    images: 2
+
+regions:
+  Île-de-France:
+    Tour Eiffel: https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/11/eb/f0/92.jpg
+    Louvre: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/df/da/34/the-glass-pyramid-is.jpg
+    Versailles: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/23/f8/5f/fountain.jpg
+    Montmartre: https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/11/ba/32/79.jpg
+    Fontainebleau: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/57/d9/f8/foret-de-fontainebleau.jpg
+  Provence-Alpes-Côte d’Azur:
+    Nice: https://commons.wikimedia.org/wiki/Category:Nice
+    Marseille: https://commons.wikimedia.org/wiki/Category:Marseille
+    Gorges du Verdon: https://commons.wikimedia.org/wiki/Category:Gorges_du_Verdon
+    Avignon: https://commons.wikimedia.org/wiki/Category:Avignon
+    Saint-Tropez: https://commons.wikimedia.org/wiki/Category:Saint-Tropez
+  Occitanie:
+    Carcassonne: https://commons.wikimedia.org/wiki/Category:Cité_de_Carcassonne
+    Pont du Gard: https://commons.wikimedia.org/wiki/Category:Pont_du_Gard
+    Toulouse: https://commons.wikimedia.org/wiki/Category:Toulouse
+    Pic du Midi: https://commons.wikimedia.org/wiki/Category:Pic_du_Midi_de_Bigorre
+    Nîmes: https://commons.wikimedia.org/wiki/Category:Nîmes
+  Nouvelle-Aquitaine:
+    Dune du Pilat: https://commons.wikimedia.org/wiki/Category:Dune_du_Pilat
+    Bordeaux: https://commons.wikimedia.org/wiki/Category:Bordeaux
+    Biarritz: https://commons.wikimedia.org/wiki/Category:Biarritz
+    La Rochelle: https://commons.wikimedia.org/wiki/Category:La_Rochelle
+    Lascaux: https://commons.wikimedia.org/wiki/Category:Lascaux
+  Auvergne-Rhône-Alpes:
+    Mont Blanc: https://commons.wikimedia.org/wiki/Category:Mont_Blanc
+    Lyon: https://commons.wikimedia.org/wiki/Category:Lyon
+    Annecy: https://commons.wikimedia.org/wiki/Category:Annecy
+    Puy de Dôme: https://commons.wikimedia.org/wiki/Category:Puy_de_Dôme
+    Ardèche: https://commons.wikimedia.org/wiki/Category:Gorges_de_l'Ardèche
+  Bretagne:
+    Saint-Malo: https://commons.wikimedia.org/wiki/Category:Saint-Malo
+    Côte de Granit Rose: https://commons.wikimedia.org/wiki/Category:Côte_de_Granit_Rose
+    Quimper: https://commons.wikimedia.org/wiki/Category:Quimper
+    Carnac: https://commons.wikimedia.org/wiki/Category:Carnac
+    Pointe du Raz: https://commons.wikimedia.org/wiki/Category:Pointe_du_Raz
+  Normandie:
+    Mont-Saint-Michel: https://commons.wikimedia.org/wiki/Category:Mont-Saint-Michel
+    Étretat: https://commons.wikimedia.org/wiki/Category:Étretat
+    Rouen: https://commons.wikimedia.org/wiki/Category:Rouen
+    Deauville: https://commons.wikimedia.org/wiki/Category:Deauville
+    Caen: https://commons.wikimedia.org/wiki/Category:Caen
+  Hauts-de-France:
+    Lille: https://commons.wikimedia.org/wiki/Category:Lille
+    Amiens: https://commons.wikimedia.org/wiki/Category:Amiens
+    Baie de Somme: https://commons.wikimedia.org/wiki/Category:Baie_de_Somme
+    Calais: https://commons.wikimedia.org/wiki/Category:Calais
+    Arras: https://commons.wikimedia.org/wiki/Category:Arras
+  Grand Est:
+    Strasbourg: https://commons.wikimedia.org/wiki/Category:Strasbourg
+    Colmar: https://commons.wikimedia.org/wiki/Category:Colmar
+    Reims: https://commons.wikimedia.org/wiki/Category:Reims
+    Nancy: https://commons.wikimedia.org/wiki/Category:Nancy
+    Route des vins d’Alsace: https://commons.wikimedia.org/wiki/Category:Alsace_Wine_Route
+  Pays de la Loire:
+    Nantes: https://commons.wikimedia.org/wiki/Category:Nantes
+    Les Sables-d’Olonne: https://commons.wikimedia.org/wiki/Category:Les_Sables-d%27Olonne
+    Puy du Fou: https://commons.wikimedia.org/wiki/Category:Puy_du_Fou
+    Angers: https://commons.wikimedia.org/wiki/Category:Angers
+    Noirmoutier: https://commons.wikimedia.org/wiki/Category:Noirmoutier
+  Centre-Val de Loire:
+    Chambord: https://commons.wikimedia.org/wiki/Category:Château_de_Chambord
+    Chenonceau: https://commons.wikimedia.org/wiki/Category:Château_de_Chenonceau
+    Orléans: https://commons.wikimedia.org/wiki/Category:Orléans
+    Tours: https://commons.wikimedia.org/wiki/Category:Tours
+    Blois: https://commons.wikimedia.org/wiki/Category:Blois
+  Bourgogne-Franche-Comté:
+    Dijon: https://commons.wikimedia.org/wiki/Category:Dijon
+    Beaune: https://commons.wikimedia.org/wiki/Category:Beaune
+    Vézelay: https://commons.wikimedia.org/wiki/Category:Vézelay
+    Besançon: https://commons.wikimedia.org/wiki/Category:Besançon
+    Montbéliard: https://commons.wikimedia.org/wiki/Category:Montbéliard
+  Corse:
+    Ajaccio: https://commons.wikimedia.org/wiki/Category:Ajaccio
+    Bonifacio: https://commons.wikimedia.org/wiki/Category:Bonifacio
+    Calanques de Piana: https://commons.wikimedia.org/wiki/Category:Calanques_de_Piana
+    Corte: https://commons.wikimedia.org/wiki/Category:Corte
+    Porto-Vecchio: https://commons.wikimedia.org/wiki/Category:Porto-Vecchio
