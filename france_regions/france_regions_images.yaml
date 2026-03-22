@@ -2,7 +2,7 @@ layout:
   region:
     max_images : 4
   slide:
-    images: 4
+    images: 2
 
 regions:
   Île-de-France:

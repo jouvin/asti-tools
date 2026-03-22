@@ -21,8 +21,8 @@ IMAGE_HEIGHT_WIDTH_RATIO = 0.71
 SLIDE_HEIGTH_INCHES = 7.2
 SLIDE_WIDTH_INCHES = 10
 IMAGE_LEFT_OFFSET_DEFAULT = 0.6
-IMAGE_TOP_OFFSET = 1.7
-LINE_INTERVAL_INCHES = 0.8
+IMAGE_TOP_OFFSET_DEFAULT = 1.7
+LINE_INTERVAL_INCHES_DEFAULT = 0.8
 
 # Dossier pour stocker les images
 os.makedirs(IMAGES_DIR, exist_ok=True)
@@ -123,20 +123,28 @@ def main():
     # Compute image width based on number of images per line
     # full width includes left margin
     image_left_offset = IMAGE_LEFT_OFFSET_DEFAULT
+    line_interval_inches = LINE_INTERVAL_INCHES_DEFAULT
+    image_top_offset = IMAGE_TOP_OFFSET_DEFAULT
     image_full_width_inches = (SLIDE_WIDTH_INCHES - image_left_offset) / images_per_line
     image_width_inches = image_full_width_inches - image_left_offset
     image_heigth_inches = image_width_inches * IMAGE_HEIGHT_WIDTH_RATIO
-    image_full_heigth_inches = image_heigth_inches + LINE_INTERVAL_INCHES
+    image_full_heigth_inches = image_heigth_inches + line_interval_inches
 
-    # Adjust image width so that images fit in the slide heigth, based on heigth/width ratio
-    # full heigth includes line interval
     total_heigth = image_full_heigth_inches * lines
     if total_heigth > SLIDE_HEIGTH_INCHES:
-        image_full_heigth_inches = (SLIDE_HEIGTH_INCHES - IMAGE_TOP_OFFSET) / lines
-        image_heigth_inches = image_full_heigth_inches - LINE_INTERVAL_INCHES
+        # Adjust image width so that images fit in the slide heigth, based on heigth/width ratio
+        # full heigth includes line interval
+        image_full_heigth_inches = (SLIDE_HEIGTH_INCHES - image_top_offset) / lines
+        image_heigth_inches = image_full_heigth_inches - line_interval_inches
         image_width_inches = image_heigth_inches / IMAGE_HEIGHT_WIDTH_RATIO
         image_full_width_inches = image_width_inches / IMAGE_HEIGHT_WIDTH_RATIO
         image_left_offset = (SLIDE_WIDTH_INCHES - (image_width_inches * images_per_line)) / (images_per_line + 1)
+    else:
+        # Center vertically the images
+        max_heigth = SLIDE_HEIGTH_INCHES - image_top_offset
+        line_interval_inches = (max_heigth - (image_heigth_inches * lines)) / (lines + 0.5)
+        image_full_heigth_inches = image_heigth_inches + line_interval_inches
+        image_top_offset += line_interval_inches * 0.5
 
     for region, images in image_paths.items():
         region_slide_num = 0
@@ -163,7 +171,7 @@ def main():
             place = image_params["place"]
             image = image_params["file"]
             left = image_left_offset + (i % images_per_line) * (image_width_inches + image_left_offset)
-            top = IMAGE_TOP_OFFSET + (image_full_heigth_inches * line)
+            top = image_top_offset + (image_full_heigth_inches * line)
             slide.shapes.add_picture(image, Inches(left), Inches(top), width=Inches(image_width_inches))
 
             # Add caption
