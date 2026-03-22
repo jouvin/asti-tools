@@ -2,7 +2,7 @@ layout:
   region:
     max_images : 4
   slide:
-    images: 2
+    images: 4
 
 regions:
   Île-de-France:
@@ -68,11 +68,10 @@ regions:
     Orléans: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/ca/7a/80/img-20191012-wa0002-largejpg.jpg
     Blois: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/e7/3b/73/photo8jpg.jpg
   Bourgogne-Franche-Comté:
-    Dijon: https://commons.wikimedia.org/wiki/Category:Dijon
-    Beaune: https://commons.wikimedia.org/wiki/Category:Beaune
-    Vézelay: https://commons.wikimedia.org/wiki/Category:Vézelay
-    Besançon: https://commons.wikimedia.org/wiki/Category:Besançon
-    Montbéliard: https://commons.wikimedia.org/wiki/Category:Montbéliard
+    Vignoble: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/c3/f0/c7/photo2jpg.jpg
+    Beaune: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/3a/f5/0f/photo0jpg.jpg
+    Vézelay: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/80/8f/a4/la-basilique-sainte-marie.jpg
+    Epoisses: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/2e/ac/8d/great.jpg
   Corse:
     Ajaccio: https://commons.wikimedia.org/wiki/Category:Ajaccio
     Bonifacio: https://commons.wikimedia.org/wiki/Category:Bonifacio
