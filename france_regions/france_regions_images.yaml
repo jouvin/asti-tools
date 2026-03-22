@@ -2,7 +2,7 @@ layout:
   region:
     max_images : 4
   slide:
-    images: 4
+    images: 2
 
 regions:
   Île-de-France:
@@ -35,17 +35,16 @@ regions:
     Forêt de Saou: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/c7/57/4b/le-creux-du-synclinal.jpg
     Annecy: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/f1/82/89/parapente-over-lac-d.jpg
   Bretagne:
-    Saint-Malo: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/69/8a/fe/les-remparts-de-saint.jpg?w=2400&h=-1&s=1
+    Saint-Malo: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/69/8a/fe/les-remparts-de-saint.jpg
     Côte de Granit Rose: C:\Users\jouvin\Pictures\2024-05 Cote Granit Rose\PXL_20240502_131443234.jpg
-    Ouessant: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/b1/c3/86/on-ne-peut-se-lasser.jpg?w=2000&h=-1&s=1
-    Mont-Saint-Michel: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/41/35/83/photo1jpg.jpg?w=1400&h=-1&s=1
-    Carnac: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/3c/ae/f3/20190421-125539-largejpg.jpg?w=1400&h=-1&s=1
-    Pointe du Raz: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/b2/ba/52/caption.jpg?w=1400&h=-1&s=1
+    Ouessant: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/b1/c3/86/on-ne-peut-se-lasser.jpg
+    Carnac: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/3c/ae/f3/20190421-125539-largejpg.jpg
+    Pointe du Raz: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/b2/ba/52/caption.jpg
   Normandie:
-    Étretat: https://commons.wikimedia.org/wiki/Category:Étretat
-    Rouen: https://commons.wikimedia.org/wiki/Category:Rouen
-    Deauville: https://commons.wikimedia.org/wiki/Category:Deauville
-    Caen: https://commons.wikimedia.org/wiki/Category:Caen
+    Mont-Saint-Michel: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/41/35/83/photo1jpg.jpg
+    Étretat: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/30/81/5c/toute-la-majeste-d-etretat.jpg
+    Rouen: hhttps://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/8f/dd/b0/rue-du-gros-horloge.jpg
+    Deauville: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/b2/b7/b1/20160618-223753-largejpg.jpg
   Hauts-de-France:
     Lille: https://commons.wikimedia.org/wiki/Category:Lille
     Amiens: https://commons.wikimedia.org/wiki/Category:Amiens
