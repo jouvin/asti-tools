@@ -3,6 +3,8 @@ Script to download images about France regions
 """
 
 import os
+import re
+import shutil
 from argparse import ArgumentParser
 from math import ceil
 
@@ -94,9 +96,13 @@ def main():
                     continue
             else:
                 print(f"Téléchargement : {place}")
-                status = download_image(url, filename)
-                if status != 0:
-                    continue
+                if re.match(r"https*:", url):
+                    status = download_image(url, filename)
+                    if status != 0:
+                        continue
+                else:
+                    # Assume it is a local file and copy it
+                    shutil.copyfile(url, filename)
             image_paths[region].append({"place": place, "file": filename})
 
     # Création du PowerPoint
