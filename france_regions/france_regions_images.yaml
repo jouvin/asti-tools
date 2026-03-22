@@ -1,4 +1,6 @@
 layout:
+  region:
+    max_images : 4
   slide:
     images: 4
 
@@ -10,17 +12,17 @@ regions:
     Montmartre: https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/11/ba/32/79.jpg
     Fontainebleau: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/57/d9/f8/foret-de-fontainebleau.jpg
   Provence-Alpes-Côte d’Azur:
-    Nice: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/33/84/4a/photo0jpg.jpg
     Marseille: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/f0/14/1e/photo3jpg.jpg
     Gorges du Verdon: https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/15/1b/b0/23.jpg
     Avignon: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/c3/06/82/pont-saint-benezet.jpg
     Calanques: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/88/f1/3a/calanque-d-en-vau-seem.jpg
+    Nice: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/33/84/4a/photo0jpg.jpg
   Occitanie:
     Carcassonne: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/f7/2b/carcassonne-center.jpg
     Pont du Gard: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/32/70/96/bd/pont-du-gard.jpg
     Toulouse: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/24/56/8c/cd/caption.jpg
-    Pic du Midi: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/56/8a/71/img-20180827-133642-largejpg.jpg
     Nîmes: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/9d/80/6f/arenes-de-nimes.jpg
+    Pic du Midi: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/56/8a/71/img-20180827-133642-largejpg.jpg
   Nouvelle-Aquitaine:
     Dune du Pilat: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/11/09/f3/20190831-112807-largejpg.jpg?w=1100&h=-1&s=1
     Bordeaux: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/3a/47/d0/miroir-d-eau-de-bordeaux.jpg?w=1800&h=-1&s=1
@@ -29,16 +31,16 @@ regions:
   Auvergne-Rhône-Alpes:
     Mont Blanc: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/40/24/46/aiguille-du-midi.jpg
     Lyon: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/7b/5f/1d/cathedral-saint-jean.jpg
-    Annecy: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/f1/82/89/parapente-over-lac-d.jpg
     Puy de Dôme: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/e0/b9/76/hotel-ibis-styles-clermont.jpg
     Forêt de Saou: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/c7/57/4b/le-creux-du-synclinal.jpg
+    Annecy: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/f1/82/89/parapente-over-lac-d.jpg
   Bretagne:
     Saint-Malo: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/69/8a/fe/les-remparts-de-saint.jpg?w=2400&h=-1&s=1
     Côte de Granit Rose: C:\Users\jouvin\Pictures\2024-05 Cote Granit Rose\PXL_20240502_131443234.jpg
     Ouessant: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/b1/c3/86/on-ne-peut-se-lasser.jpg?w=2000&h=-1&s=1
+    Mont-Saint-Michel: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/41/35/83/photo1jpg.jpg?w=1400&h=-1&s=1
     Carnac: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/3c/ae/f3/20190421-125539-largejpg.jpg?w=1400&h=-1&s=1
     Pointe du Raz: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/30/b2/ba/52/caption.jpg?w=1400&h=-1&s=1
-    Mont-Saint-Michel: https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/41/35/83/photo1jpg.jpg?w=1400&h=-1&s=1
   Normandie:
     Étretat: https://commons.wikimedia.org/wiki/Category:Étretat
     Rouen: https://commons.wikimedia.org/wiki/Category:Rouen

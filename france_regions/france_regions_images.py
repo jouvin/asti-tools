@@ -73,7 +73,11 @@ def main():
     options = parser.parse_args()
 
     images_per_slide = IMAGES_PER_SLIDE
+    images_per_region = None
     if "layout" in config:
+        if "region" in config["layout"]:
+            if "max_images" in config["layout"]["region"]:
+                images_per_region = config["layout"]["region"]["max_images"]
         if "slide" in config["layout"]:
             if "images" in config["layout"]["slide"]:
                 images_per_slide = config["layout"]["slide"]["images"]
@@ -138,6 +142,8 @@ def main():
         region_slide_num = 0
 
         for i, image_params in enumerate(images):
+            if images_per_region and i == images_per_region:
+                break
             if (i % images_per_slide) == 0:
                 region_slide_num += 1
                 # Create a new slile
