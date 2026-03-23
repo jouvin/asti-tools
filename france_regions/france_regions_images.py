@@ -149,9 +149,28 @@ def main():
     for region, images in image_paths.items():
         region_slide_num = 0
 
+        # Compute left offset for last line to balance free space around images if the number of
+        # images on this line is less than the number of images on other lines. It can be different
+        # for each region, depending on the actual number of images for the region
+        region_image_num = len(images)
+        if images_per_region and len(images) > images_per_region:
+            region_image_num = images_per_region
+        region_lines = ceil(region_image_num / images_per_line)
+        region_current_line = 0
+        last_line_images = region_image_num % images_per_line
+        if last_line_images == 0:
+            last_line_left_offset = image_left_offset
+        else:
+            last_line_left_offset = (SLIDE_WIDTH_INCHES - (image_width_inches * last_line_images)) / (
+                    last_line_images + 1)
+
         for i, image_params in enumerate(images):
             if images_per_region and i == images_per_region:
                 break
+
+            if (i % images_per_line) == 0:
+                region_current_line += 1
+
             if (i % images_per_slide) == 0:
                 region_slide_num += 1
                 # Create a new slile
@@ -170,7 +189,17 @@ def main():
             # Add image
             place = image_params["place"]
             image = image_params["file"]
-            left = image_left_offset + (i % images_per_line) * (image_width_inches + image_left_offset)
+            if region_current_line == region_lines:
+                # Last line
+                left_offset = last_line_left_offset
+                if last_line_images == 0:
+                    line_image_num = images_per_line
+                else:
+                    line_image_num = last_line_images
+            else:
+                left_offset = image_left_offset
+                line_image_num = images_per_line
+            left = left_offset + (i % line_image_num) * (image_width_inches + left_offset)
             top = image_top_offset + (image_full_heigth_inches * line)
             slide.shapes.add_picture(image, Inches(left), Inches(top), width=Inches(image_width_inches))
 
@@ -178,7 +207,7 @@ def main():
             caption = slide.shapes.add_textbox(
                 Inches(left + 0.5),
                 Inches(top + image_heigth_inches + 0.05),
-                Inches(image_width_inches + image_left_offset),
+                Inches(image_width_inches + left_offset),
                 Inches(0.5),
             )
             caption.text_frame.text = place
