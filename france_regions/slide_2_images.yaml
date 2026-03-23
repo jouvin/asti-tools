@@ -6,4 +6,7 @@ layout:
     image_alignment: bottom
   title: Régions de France en image
 
+presentation:
+  name: diaporama_regions_images_2.pptx
+
 regions_config: regions_images.yaml

@@ -17,6 +17,7 @@ from yaml import safe_load
 
 CONFIG_FILE_DEFAULT = "france_regions_images.yaml"
 IMAGES_DIR = "images_regions"
+OUTPUT_FILE_DEFAULT = "diaporama_regions_images.pptx"
 
 IMAGES_PER_SLIDE = 5
 IMAGE_HEIGHT_WIDTH_RATIO = 0.75
@@ -30,6 +31,7 @@ IMAGE_MAX_PIXEL_HEIGHT = 600
 
 SLD_LAYOUT_TITLE_SLIDE = 0
 SLD_LAYOUT_TITLE_ONLY = 5
+
 
 # Fonction pour télécharger une image depuis Unsplash (source libre)
 def download_image(url, filename):
@@ -73,8 +75,9 @@ def main():
     # Configuration file processing
     images_per_slide = IMAGES_PER_SLIDE
     images_per_region = None
-    presentation_title = None
     image_bottom_alignment = False
+    output_file = OUTPUT_FILE_DEFAULT
+    presentation_title = None
 
     with open(options.config, "r", encoding="utf-8") as f:
         config = safe_load(f.read())
@@ -112,6 +115,13 @@ def main():
                     )
         if "title" in config["layout"]:
             presentation_title = config["layout"]["title"]
+
+    if "presentation" in config:
+        if "name" in config["presentation"]:
+            output_file = config["presentation"]["name"]
+
+    # Presentation filename is expected to be a file name without a path to be created in IMAGE_DIR
+    output_file = f"{IMAGES_DIR}/{output_file}"
 
     # Command line options take precedence over config file
     if options.image_per_page:
@@ -289,9 +299,9 @@ def main():
             p.alignment = PP_ALIGN.CENTER
 
     # Sauvegarde
-    prs.save(f"{IMAGES_DIR}/diaporama_regions_images.pptx")
+    prs.save(output_file)
 
-    print("\n✅ Terminé ! Fichier créé : diaporama_regions_images.pptx")
+    print(f"\n✅ Terminé ! Fichier créé : {output_file}")
 
 
 if __name__ == "__main__":
