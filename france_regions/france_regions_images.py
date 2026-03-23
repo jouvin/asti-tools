@@ -82,6 +82,7 @@ def main():
     images_per_slide = IMAGES_PER_SLIDE
     images_per_region = None
     presentation_title = None
+    image_bottom_alignment = False
     if "layout" in config:
         if "region" in config["layout"]:
             if "max_images" in config["layout"]["region"]:
@@ -89,6 +90,14 @@ def main():
         if "slide" in config["layout"]:
             if "images" in config["layout"]["slide"]:
                 images_per_slide = config["layout"]["slide"]["images"]
+            if "image_alignment" in config["layout"]["slide"]:
+                if config["layout"]["slide"]["image_alignment"] == "bottom":
+                    image_bottom_alignment = True
+                else:
+                    raise Exception(
+                        f"Invalid value found for layout/slide/image_alignment "
+                        f"({config['layout']['slide']['image_alignment']})"
+                    )
         if "title" in config["layout"]:
             presentation_title = config["layout"]["title"]
 
@@ -226,9 +235,15 @@ def main():
             else:
                 line = (i % images_per_slide) // images_per_line
 
-            # Add image
             place = image_params["place"]
             image = image_params["file"]
+
+            # Retrieve image size
+            image_actual_width, image_actual_height = imagesize.get(image)
+            image_scaling_factor = image_width_inches / (image_actual_width * inches_pixels_ratio)
+            image_actual_height_inches = (image_actual_height * inches_pixels_ratio) * image_scaling_factor
+
+            # Add image
             if region_current_line == region_lines:
                 # Last line
                 left_offset = last_line_left_offset
@@ -241,12 +256,13 @@ def main():
                 line_image_num = images_per_line
             left = left_offset + (i % line_image_num) * (image_width_inches + left_offset)
             top = image_top_offset + (image_full_height_inches * line)
-            slide.shapes.add_picture(image, Inches(left), Inches(top), width=Inches(image_width_inches))
+            image_top = top
+            if image_bottom_alignment and image_actual_height_inches <= image_height_inches:
+                # Do not align on the bottom images whose are higher than the standard images
+                image_top += image_height_inches - image_actual_height_inches
+            slide.shapes.add_picture(image, Inches(left), Inches(image_top), width=Inches(image_width_inches))
 
             # Add caption, aligned vertically for all images, except when the image is too high
-            image_actual_width, image_actual_height = imagesize.get(image)
-            image_scaling_factor = image_width_inches / (image_actual_width * inches_pixels_ratio)
-            image_actual_height_inches = (image_actual_height * inches_pixels_ratio) * image_scaling_factor
             if image_actual_height_inches < image_height_inches:
                 image_actual_height_inches = image_height_inches
             caption = slide.shapes.add_textbox(
