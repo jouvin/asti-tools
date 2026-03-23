@@ -19,7 +19,7 @@ CONFIG_FILE = "france_regions_images.yaml"
 IMAGES_DIR = "images_regions"
 
 IMAGES_PER_SLIDE = 5
-IMAGE_HEIGHT_WIDTH_RATIO = 0.71
+IMAGE_HEIGHT_WIDTH_RATIO = 0.75
 SLIDE_HEIGHT_INCHES = 7.2
 SLIDE_WIDTH_INCHES = 10
 IMAGE_LEFT_OFFSET_DEFAULT = 0.6
@@ -136,6 +136,10 @@ def main():
         raise Exception("More than 6 images per slide currently not supported")
     images_per_line = ceil(images_per_slide / lines)
 
+    # Pixels / inches ration
+    max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
+    inches_pixels_ratio = max_image_height_inches / IMAGE_MAX_PIXEL_HEIGHT
+
     # Compute image width based on number of images per line
     # full width includes left margin
     image_left_offset = IMAGE_LEFT_OFFSET_DEFAULT
@@ -184,7 +188,7 @@ def main():
         if "maps" in config and region in config["maps"]:
             width, height = imagesize.get(config["maps"][region])
             max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
-            height_inches = height / IMAGE_MAX_PIXEL_HEIGHT * max_image_height_inches
+            height_inches = height * inches_pixels_ratio
             if height_inches > max_image_height_inches:
                 slide_image_width = max_image_height_inches * width / height
             else:
@@ -239,10 +243,15 @@ def main():
             top = image_top_offset + (image_full_height_inches * line)
             slide.shapes.add_picture(image, Inches(left), Inches(top), width=Inches(image_width_inches))
 
-            # Add caption
+            # Add caption, aligned vertically for all images, except when the image is too high
+            image_actual_width, image_actual_height = imagesize.get(image)
+            image_scaling_factor = image_width_inches / (image_actual_width * inches_pixels_ratio)
+            image_actual_height_inches = (image_actual_height * inches_pixels_ratio) * image_scaling_factor
+            if image_actual_height_inches < image_height_inches:
+                image_actual_height_inches = image_height_inches
             caption = slide.shapes.add_textbox(
                 Inches(left),
-                Inches(top + image_height_inches + 0.05),
+                Inches(top + image_actual_height_inches),
                 Inches(image_width_inches),
                 Inches(0.5),
             )
