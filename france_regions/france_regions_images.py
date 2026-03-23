@@ -15,7 +15,7 @@ from pptx.enum.text import PP_ALIGN
 from pptx.util import Inches
 from yaml import safe_load
 
-CONFIG_FILE = "france_regions_images.yaml"
+CONFIG_FILE_DEFAULT = "france_regions_images.yaml"
 IMAGES_DIR = "images_regions"
 
 IMAGES_PER_SLIDE = 5
@@ -30,20 +30,6 @@ IMAGE_MAX_PIXEL_HEIGHT = 600
 
 SLD_LAYOUT_TITLE_SLIDE = 0
 SLD_LAYOUT_TITLE_ONLY = 5
-
-# Dossier pour stocker les images
-os.makedirs(IMAGES_DIR, exist_ok=True)
-
-# Images par région
-with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-    config = safe_load(f.read())
-
-# Données (régions + lieux)
-if "regions" in config:
-    regions = config["regions"]
-else:
-    raise Exception(f"No regions found in {CONFIG_FILE}")
-
 
 # Fonction pour télécharger une image depuis Unsplash (source libre)
 def download_image(url, filename):
@@ -75,14 +61,40 @@ def main():
         help="Number of images per page",
     )
     parser.add_argument(
+        "--config",
+        default=CONFIG_FILE_DEFAULT,
+        help=f"Configuration file (D: {CONFIG_FILE_DEFAULT})",
+    )
+    parser.add_argument(
         "--no-download", action="store_true", default=False, help="Do not download images, use existing ones"
     )
     options = parser.parse_args()
 
+    # Configuration file processing
     images_per_slide = IMAGES_PER_SLIDE
     images_per_region = None
     presentation_title = None
     image_bottom_alignment = False
+
+    with open(options.config, "r", encoding="utf-8") as f:
+        config = safe_load(f.read())
+
+    if "regions_config" in config:
+        with open(config["regions_config"], "r", encoding="utf-8") as f:
+            regions_config = safe_load(f.read())
+
+        if "regions" in regions_config:
+            regions = regions_config["regions"]
+        else:
+            raise Exception(f"No regions found in {config["regions_config"]}")
+
+        if "maps" in regions_config:
+            maps = regions_config["maps"]
+        else:
+            maps = {}
+    else:
+        raise Exception(f"'regions_config' not found in configuration file {options.config}")
+
     if "layout" in config:
         if "region" in config["layout"]:
             if "max_images" in config["layout"]["region"]:
@@ -105,6 +117,7 @@ def main():
     if options.image_per_page:
         images_per_slide = options.image_per_page
 
+    os.makedirs(IMAGES_DIR, exist_ok=True)
     image_paths = {}
 
     for region, places in regions.items():
@@ -194,8 +207,8 @@ def main():
                 last_line_images + 1
             )
 
-        if "maps" in config and region in config["maps"]:
-            width, height = imagesize.get(config["maps"][region])
+        if region in maps:
+            width, height = imagesize.get(maps[region])
             max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
             height_inches = height * inches_pixels_ratio
             if height_inches > max_image_height_inches:
@@ -206,7 +219,7 @@ def main():
             slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_ONLY]
             slide = prs.slides.add_slide(slide_layout)
             slide.shapes.add_picture(
-                config["maps"][region],
+                maps[region],
                 Inches(left_offset),
                 Inches(IMAGE_TOP_OFFSET_DEFAULT),
                 width=Inches(slide_image_width),

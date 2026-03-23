@@ -1,0 +1,9 @@
+layout:
+  region:
+    max_images : 4
+  slide:
+    images: 4
+    image_alignment: bottom
+  title: Régions de France en image
+
+regions_config: regions_images.yaml
