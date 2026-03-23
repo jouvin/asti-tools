@@ -11,7 +11,6 @@ from math import ceil
 import requests
 from pptx import Presentation
 from pptx.enum.text import PP_ALIGN
-from pptx.text.text import TextFrame
 from pptx.util import Inches
 from yaml import safe_load
 
@@ -25,6 +24,9 @@ SLIDE_WIDTH_INCHES = 10
 IMAGE_LEFT_OFFSET_DEFAULT = 0.6
 IMAGE_TOP_OFFSET_DEFAULT = 1.7
 LINE_INTERVAL_INCHES_DEFAULT = 0.8
+
+SLD_LAYOUT_TITLE_SLIDE = 0
+SLD_LAYOUT_TITLE_ONLY = 5
 
 # Dossier pour stocker les images
 os.makedirs(IMAGES_DIR, exist_ok=True)
@@ -76,6 +78,7 @@ def main():
 
     images_per_slide = IMAGES_PER_SLIDE
     images_per_region = None
+    presentation_title = None
     if "layout" in config:
         if "region" in config["layout"]:
             if "max_images" in config["layout"]["region"]:
@@ -83,6 +86,8 @@ def main():
         if "slide" in config["layout"]:
             if "images" in config["layout"]["slide"]:
                 images_per_slide = config["layout"]["slide"]["images"]
+        if "title" in config["layout"]:
+            presentation_title = config["layout"]["title"]
 
     # Command line options take precedence over config file
     if options.image_per_page:
@@ -111,8 +116,14 @@ def main():
                     shutil.copyfile(url, filename)
             image_paths[region].append({"place": place, "file": filename})
 
-    # Création du PowerPoint
+    # Create PowerPoint file and title slide
     prs = Presentation()
+    # Create a title slide if a title is defined in configuration
+    if presentation_title:
+        slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_SLIDE]
+        title_slide = prs.slides.add_slide(slide_layout)
+        title = title_slide.shapes.title
+        title.text = "Régions de France en image"
 
     if images_per_slide <= 3:
         lines = 1
@@ -164,7 +175,8 @@ def main():
             last_line_left_offset = image_left_offset
         else:
             last_line_left_offset = (SLIDE_WIDTH_INCHES - (image_width_inches * last_line_images)) / (
-                    last_line_images + 1)
+                last_line_images + 1
+            )
 
         for i, image_params in enumerate(images):
             if images_per_region and i == images_per_region:
@@ -176,7 +188,7 @@ def main():
             if (i % images_per_slide) == 0:
                 region_slide_num += 1
                 # Create a new slile
-                slide_layout = prs.slide_layouts[5]
+                slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_ONLY]
                 slide = prs.slides.add_slide(slide_layout)
                 # Titre
                 title = slide.shapes.title

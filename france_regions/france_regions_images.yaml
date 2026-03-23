@@ -3,6 +3,7 @@ layout:
     max_images : 4
   slide:
     images: 2
+  title: Régions de France en image
 
 regions:
   Île-de-France:
