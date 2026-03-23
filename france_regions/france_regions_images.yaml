@@ -5,6 +5,21 @@ layout:
     images: 2
   title: Régions de France en image
 
+maps:
+  Île-de-France: cartes\carte regions.jpg
+  Provence-Alpes-Côte d’Azur: cartes\carte regions.jpg
+  Occitanie: cartes\carte regions.jpg
+  Nouvelle-Aquitaine: cartes\carte regions.jpg
+  Auvergne-Rhône-Alpes: cartes\carte regions.jpg
+  Bretagne: cartes\carte regions.jpg
+  Normandie: cartes\carte regions.jpg
+  Hauts-de-France: cartes\carte regions.jpg
+  Grand Est: cartes\carte regions.jpg
+  Pays de la Loire: cartes\carte regions.jpg
+  Centre-Val de Loire: cartes\carte regions.jpg
+  Bourgogne-Franche-Comté: cartes\carte regions.jpg
+  Corse: cartes\carte regions.jpg
+
 regions:
   Île-de-France:
     Tour Eiffel: https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/11/eb/f0/92.jpg

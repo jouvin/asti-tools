@@ -8,6 +8,7 @@ import shutil
 from argparse import ArgumentParser
 from math import ceil
 
+import imagesize
 import requests
 from pptx import Presentation
 from pptx.enum.text import PP_ALIGN
@@ -19,11 +20,13 @@ IMAGES_DIR = "images_regions"
 
 IMAGES_PER_SLIDE = 5
 IMAGE_HEIGHT_WIDTH_RATIO = 0.71
-SLIDE_HEIGTH_INCHES = 7.2
+SLIDE_HEIGHT_INCHES = 7.2
 SLIDE_WIDTH_INCHES = 10
 IMAGE_LEFT_OFFSET_DEFAULT = 0.6
 IMAGE_TOP_OFFSET_DEFAULT = 1.7
 LINE_INTERVAL_INCHES_DEFAULT = 0.8
+
+IMAGE_MAX_PIXEL_HEIGHT = 600
 
 SLD_LAYOUT_TITLE_SLIDE = 0
 SLD_LAYOUT_TITLE_ONLY = 5
@@ -140,23 +143,23 @@ def main():
     image_top_offset = IMAGE_TOP_OFFSET_DEFAULT
     image_full_width_inches = (SLIDE_WIDTH_INCHES - image_left_offset) / images_per_line
     image_width_inches = image_full_width_inches - image_left_offset
-    image_heigth_inches = image_width_inches * IMAGE_HEIGHT_WIDTH_RATIO
-    image_full_heigth_inches = image_heigth_inches + line_interval_inches
+    image_height_inches = image_width_inches * IMAGE_HEIGHT_WIDTH_RATIO
+    image_full_height_inches = image_height_inches + line_interval_inches
 
-    total_heigth = image_full_heigth_inches * lines
-    if total_heigth > SLIDE_HEIGTH_INCHES:
-        # Adjust image width so that images fit in the slide heigth, based on heigth/width ratio
-        # full heigth includes line interval
-        image_full_heigth_inches = (SLIDE_HEIGTH_INCHES - image_top_offset) / lines
-        image_heigth_inches = image_full_heigth_inches - line_interval_inches
-        image_width_inches = image_heigth_inches / IMAGE_HEIGHT_WIDTH_RATIO
+    total_height = image_full_height_inches * lines
+    if total_height > SLIDE_HEIGHT_INCHES:
+        # Adjust image width so that images fit in the slide height, based on height/width ratio
+        # full height includes line interval
+        image_full_height_inches = (SLIDE_HEIGHT_INCHES - image_top_offset) / lines
+        image_height_inches = image_full_height_inches - line_interval_inches
+        image_width_inches = image_height_inches / IMAGE_HEIGHT_WIDTH_RATIO
         image_full_width_inches = image_width_inches / IMAGE_HEIGHT_WIDTH_RATIO
         image_left_offset = (SLIDE_WIDTH_INCHES - (image_width_inches * images_per_line)) / (images_per_line + 1)
     else:
         # Center vertically the images
-        max_heigth = SLIDE_HEIGTH_INCHES - image_top_offset
-        line_interval_inches = (max_heigth - (image_heigth_inches * lines)) / (lines + 0.5)
-        image_full_heigth_inches = image_heigth_inches + line_interval_inches
+        max_height = SLIDE_HEIGHT_INCHES - image_top_offset
+        line_interval_inches = (max_height - (image_height_inches * lines)) / (lines + 0.5)
+        image_full_height_inches = image_height_inches + line_interval_inches
         image_top_offset += line_interval_inches * 0.5
 
     for region, images in image_paths.items():
@@ -177,6 +180,25 @@ def main():
             last_line_left_offset = (SLIDE_WIDTH_INCHES - (image_width_inches * last_line_images)) / (
                 last_line_images + 1
             )
+
+        if "maps" in config and region in config["maps"]:
+            width, height = imagesize.get(config["maps"][region])
+            max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
+            height_inches = height / IMAGE_MAX_PIXEL_HEIGHT * max_image_height_inches
+            if height_inches > max_image_height_inches:
+                slide_image_width = max_image_height_inches * width / height
+            else:
+                slide_image_width = SLIDE_WIDTH_INCHES - (2 * IMAGE_LEFT_OFFSET_DEFAULT)
+            left_offset = (SLIDE_WIDTH_INCHES - slide_image_width) / 2
+            slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_ONLY]
+            slide = prs.slides.add_slide(slide_layout)
+            slide.shapes.add_picture(
+                config["maps"][region],
+                Inches(left_offset),
+                Inches(IMAGE_TOP_OFFSET_DEFAULT),
+                width=Inches(slide_image_width),
+            )
+            slide.shapes.title.text = region
 
         for i, image_params in enumerate(images):
             if images_per_region and i == images_per_region:
@@ -214,13 +236,13 @@ def main():
                 left_offset = image_left_offset
                 line_image_num = images_per_line
             left = left_offset + (i % line_image_num) * (image_width_inches + left_offset)
-            top = image_top_offset + (image_full_heigth_inches * line)
+            top = image_top_offset + (image_full_height_inches * line)
             slide.shapes.add_picture(image, Inches(left), Inches(top), width=Inches(image_width_inches))
 
             # Add caption
             caption = slide.shapes.add_textbox(
                 Inches(left),
-                Inches(top + image_heigth_inches + 0.05),
+                Inches(top + image_height_inches + 0.05),
                 Inches(image_width_inches),
                 Inches(0.5),
             )
