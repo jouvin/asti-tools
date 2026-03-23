@@ -10,6 +10,8 @@ from math import ceil
 
 import requests
 from pptx import Presentation
+from pptx.enum.text import PP_ALIGN
+from pptx.text.text import TextFrame
 from pptx.util import Inches
 from yaml import safe_load
 
@@ -205,12 +207,14 @@ def main():
 
             # Add caption
             caption = slide.shapes.add_textbox(
-                Inches(left + 0.5),
+                Inches(left),
                 Inches(top + image_heigth_inches + 0.05),
-                Inches(image_width_inches + left_offset),
+                Inches(image_width_inches),
                 Inches(0.5),
             )
-            caption.text_frame.text = place
+            p = caption.text_frame.paragraphs[0]
+            p.text = place
+            p.alignment = PP_ALIGN.CENTER
 
     # Sauvegarde
     prs.save(f"{IMAGES_DIR}/diaporama_regions_images.pptx")
