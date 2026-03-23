@@ -8,5 +8,7 @@ layout:
 
 presentation:
   name: diaporama_regions_images_4.pptx
+  map:
+    global_only: true
 
 regions_config: regions_images.yaml

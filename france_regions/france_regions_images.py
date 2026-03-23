@@ -54,6 +54,37 @@ def download_image(url, filename):
     return status
 
 
+def add_map_slide(presentation: Presentation, region: str, map_file: str, inches_pixels_ratio: float):
+    """
+    Add a map slide at the current position in the presentation
+
+    :param presentation: presentation object
+    :param map_file: map filename
+    :param inches_pixels_ratio: inches/pixel ratio
+    :return: None
+    """
+    width, height = imagesize.get(map_file)
+
+    max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
+    height_inches = height * inches_pixels_ratio
+    if height_inches > max_image_height_inches:
+        slide_image_width = max_image_height_inches * width / height
+    else:
+        slide_image_width = SLIDE_WIDTH_INCHES - (2 * IMAGE_LEFT_OFFSET_DEFAULT)
+    left_offset = (SLIDE_WIDTH_INCHES - slide_image_width) / 2
+    slide_layout = presentation.slide_layouts[SLD_LAYOUT_TITLE_ONLY]
+    slide = presentation.slides.add_slide(slide_layout)
+    slide.shapes.add_picture(
+        map_file,
+        Inches(left_offset),
+        Inches(IMAGE_TOP_OFFSET_DEFAULT),
+        width=Inches(slide_image_width),
+    )
+    slide.shapes.title.text = region
+
+    return
+
+
 def main():
     parser = ArgumentParser()
     parser.add_argument(
@@ -78,6 +109,7 @@ def main():
     image_bottom_alignment = False
     output_file = OUTPUT_FILE_DEFAULT
     presentation_title = None
+    global_map_only = False
 
     with open(options.config, "r", encoding="utf-8") as f:
         config = safe_load(f.read())
@@ -119,6 +151,9 @@ def main():
     if "presentation" in config:
         if "name" in config["presentation"]:
             output_file = config["presentation"]["name"]
+        if "map" in config["presentation"]:
+            if "global_only" in config["presentation"]["map"]:
+                global_map_only = config["presentation"]["map"]["global_only"]
 
     # Presentation filename is expected to be a file name without a path to be created in IMAGE_DIR
     output_file = f"{IMAGES_DIR}/{output_file}"
@@ -198,6 +233,12 @@ def main():
         image_full_height_inches = image_height_inches + line_interval_inches
         image_top_offset += line_interval_inches * 0.5
 
+    if global_map_only:
+        if "global_map" in maps:
+            add_map_slide(prs, "Carte des régions", maps["global_map"], inches_pixels_ratio)
+        else:
+            raise Exception(f"Global map requested but no maps/global_map defined in " f"{config['regions_config']}")
+
     for region, images in image_paths.items():
         region_slide_num = 0
 
@@ -217,24 +258,8 @@ def main():
                 last_line_images + 1
             )
 
-        if region in maps:
-            width, height = imagesize.get(maps[region])
-            max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
-            height_inches = height * inches_pixels_ratio
-            if height_inches > max_image_height_inches:
-                slide_image_width = max_image_height_inches * width / height
-            else:
-                slide_image_width = SLIDE_WIDTH_INCHES - (2 * IMAGE_LEFT_OFFSET_DEFAULT)
-            left_offset = (SLIDE_WIDTH_INCHES - slide_image_width) / 2
-            slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_ONLY]
-            slide = prs.slides.add_slide(slide_layout)
-            slide.shapes.add_picture(
-                maps[region],
-                Inches(left_offset),
-                Inches(IMAGE_TOP_OFFSET_DEFAULT),
-                width=Inches(slide_image_width),
-            )
-            slide.shapes.title.text = region
+        if not global_map_only and region in maps:
+            add_map_slide(prs, region, maps[region], inches_pixels_ratio)
 
         for i, image_params in enumerate(images):
             if images_per_region and i == images_per_region:
