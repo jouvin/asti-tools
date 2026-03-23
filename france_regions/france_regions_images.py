@@ -15,8 +15,9 @@ from pptx.enum.text import PP_ALIGN
 from pptx.util import Inches
 from yaml import safe_load
 
-CONFIG_FILE = "france_regions_images.yaml"
+CONFIG_FILE_DEFAULT = "france_regions_images.yaml"
 IMAGES_DIR = "images_regions"
+OUTPUT_FILE_DEFAULT = "diaporama_regions_images.pptx"
 
 IMAGES_PER_SLIDE = 5
 IMAGE_HEIGHT_WIDTH_RATIO = 0.75
@@ -30,19 +31,6 @@ IMAGE_MAX_PIXEL_HEIGHT = 600
 
 SLD_LAYOUT_TITLE_SLIDE = 0
 SLD_LAYOUT_TITLE_ONLY = 5
-
-# Dossier pour stocker les images
-os.makedirs(IMAGES_DIR, exist_ok=True)
-
-# Images par région
-with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-    config = safe_load(f.read())
-
-# Données (régions + lieux)
-if "regions" in config:
-    regions = config["regions"]
-else:
-    raise Exception(f"No regions found in {CONFIG_FILE}")
 
 
 # Fonction pour télécharger une image depuis Unsplash (source libre)
@@ -66,6 +54,37 @@ def download_image(url, filename):
     return status
 
 
+def add_map_slide(presentation: Presentation, region: str, map_file: str, inches_pixels_ratio: float):
+    """
+    Add a map slide at the current position in the presentation
+
+    :param presentation: presentation object
+    :param map_file: map filename
+    :param inches_pixels_ratio: inches/pixel ratio
+    :return: None
+    """
+    width, height = imagesize.get(map_file)
+
+    max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
+    height_inches = height * inches_pixels_ratio
+    if height_inches > max_image_height_inches:
+        slide_image_width = max_image_height_inches * width / height
+    else:
+        slide_image_width = SLIDE_WIDTH_INCHES - (2 * IMAGE_LEFT_OFFSET_DEFAULT)
+    left_offset = (SLIDE_WIDTH_INCHES - slide_image_width) / 2
+    slide_layout = presentation.slide_layouts[SLD_LAYOUT_TITLE_ONLY]
+    slide = presentation.slides.add_slide(slide_layout)
+    slide.shapes.add_picture(
+        map_file,
+        Inches(left_offset),
+        Inches(IMAGE_TOP_OFFSET_DEFAULT),
+        width=Inches(slide_image_width),
+    )
+    slide.shapes.title.text = region
+
+    return
+
+
 def main():
     parser = ArgumentParser()
     parser.add_argument(
@@ -75,14 +94,42 @@ def main():
         help="Number of images per page",
     )
     parser.add_argument(
+        "--config",
+        default=CONFIG_FILE_DEFAULT,
+        help=f"Configuration file (D: {CONFIG_FILE_DEFAULT})",
+    )
+    parser.add_argument(
         "--no-download", action="store_true", default=False, help="Do not download images, use existing ones"
     )
     options = parser.parse_args()
 
+    # Configuration file processing
     images_per_slide = IMAGES_PER_SLIDE
     images_per_region = None
-    presentation_title = None
     image_bottom_alignment = False
+    output_file = OUTPUT_FILE_DEFAULT
+    presentation_title = None
+    global_map_only = False
+
+    with open(options.config, "r", encoding="utf-8") as f:
+        config = safe_load(f.read())
+
+    if "regions_config" in config:
+        with open(config["regions_config"], "r", encoding="utf-8") as f:
+            regions_config = safe_load(f.read())
+
+        if "regions" in regions_config:
+            regions = regions_config["regions"]
+        else:
+            raise Exception(f"No regions found in {config["regions_config"]}")
+
+        if "maps" in regions_config:
+            maps = regions_config["maps"]
+        else:
+            maps = {}
+    else:
+        raise Exception(f"'regions_config' not found in configuration file {options.config}")
+
     if "layout" in config:
         if "region" in config["layout"]:
             if "max_images" in config["layout"]["region"]:
@@ -101,10 +148,21 @@ def main():
         if "title" in config["layout"]:
             presentation_title = config["layout"]["title"]
 
+    if "presentation" in config:
+        if "name" in config["presentation"]:
+            output_file = config["presentation"]["name"]
+        if "map" in config["presentation"]:
+            if "global_only" in config["presentation"]["map"]:
+                global_map_only = config["presentation"]["map"]["global_only"]
+
+    # Presentation filename is expected to be a file name without a path to be created in IMAGE_DIR
+    output_file = f"{IMAGES_DIR}/{output_file}"
+
     # Command line options take precedence over config file
     if options.image_per_page:
         images_per_slide = options.image_per_page
 
+    os.makedirs(IMAGES_DIR, exist_ok=True)
     image_paths = {}
 
     for region, places in regions.items():
@@ -175,6 +233,12 @@ def main():
         image_full_height_inches = image_height_inches + line_interval_inches
         image_top_offset += line_interval_inches * 0.5
 
+    if global_map_only:
+        if "global_map" in maps:
+            add_map_slide(prs, "Carte des régions", maps["global_map"], inches_pixels_ratio)
+        else:
+            raise Exception(f"Global map requested but no maps/global_map defined in " f"{config['regions_config']}")
+
     for region, images in image_paths.items():
         region_slide_num = 0
 
@@ -194,24 +258,8 @@ def main():
                 last_line_images + 1
             )
 
-        if "maps" in config and region in config["maps"]:
-            width, height = imagesize.get(config["maps"][region])
-            max_image_height_inches = SLIDE_HEIGHT_INCHES - IMAGE_TOP_OFFSET_DEFAULT - LINE_INTERVAL_INCHES_DEFAULT
-            height_inches = height * inches_pixels_ratio
-            if height_inches > max_image_height_inches:
-                slide_image_width = max_image_height_inches * width / height
-            else:
-                slide_image_width = SLIDE_WIDTH_INCHES - (2 * IMAGE_LEFT_OFFSET_DEFAULT)
-            left_offset = (SLIDE_WIDTH_INCHES - slide_image_width) / 2
-            slide_layout = prs.slide_layouts[SLD_LAYOUT_TITLE_ONLY]
-            slide = prs.slides.add_slide(slide_layout)
-            slide.shapes.add_picture(
-                config["maps"][region],
-                Inches(left_offset),
-                Inches(IMAGE_TOP_OFFSET_DEFAULT),
-                width=Inches(slide_image_width),
-            )
-            slide.shapes.title.text = region
+        if not global_map_only and region in maps:
+            add_map_slide(prs, region, maps[region], inches_pixels_ratio)
 
         for i, image_params in enumerate(images):
             if images_per_region and i == images_per_region:
@@ -276,9 +324,9 @@ def main():
             p.alignment = PP_ALIGN.CENTER
 
     # Sauvegarde
-    prs.save(f"{IMAGES_DIR}/diaporama_regions_images.pptx")
+    prs.save(output_file)
 
-    print("\n✅ Terminé ! Fichier créé : diaporama_regions_images.pptx")
+    print(f"\n✅ Terminé ! Fichier créé : {output_file}")
 
 
 if __name__ == "__main__":

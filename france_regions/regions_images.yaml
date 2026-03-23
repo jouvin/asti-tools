@@ -1,12 +1,5 @@
-layout:
-  region:
-    max_images : 4
-  slide:
-    images: 2
-    image_alignment: bottom
-  title: Régions de France en image
-
 maps:
+  global_map: cartes\carte regions.jpg
   Île-de-France: cartes\carte regions.jpg
   Provence-Alpes-Côte d’Azur: cartes\carte regions.jpg
   Occitanie: cartes\carte regions.jpg
